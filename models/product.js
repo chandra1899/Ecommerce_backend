@@ -10,23 +10,23 @@ const productSchema=new mongoose.Schema({
         required:true
     },
     price:{
-        type:Number,
-        reqiured:true
+        type:String,
+        required:true
     },
     categery:{
         type:String
     },
-    quantity:{
-        type:Number,
-        reqiured:true
-    },
+    // quantity:{
+    //     type:Number,
+    //     reqiured:true
+    // },
     photo:{
         data:Buffer,
         contentType:String
     },
     starts:{
-        type:Number,
-        default:3
+        type:String,
+        default:'3'
     },
     belongsTo:{
         type:String,

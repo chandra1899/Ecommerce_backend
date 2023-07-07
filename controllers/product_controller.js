@@ -6,7 +6,7 @@ module.exports.create=async (req,res)=>{
     try {
         // const {name,description,price,quantity,categery}=req.feilds;
         
-        const form = formidable({});
+        const form =new formidable.IncomingForm(); 
         form.parse(req, async (err, fields, files) => {
             if(err){
                 console.log(err);
@@ -15,11 +15,19 @@ module.exports.create=async (req,res)=>{
             console.log('in products');
             console.log(fields, files);
             const {photo}=files
-            console.log(fields,files);
-            let product=await Product.create(fields);
-            product.photo.data=fs.readFileSync(photo.path);
-            product.photo.contentType=photo.type;
+            let product=await Product.create({
+                name:fields.name[0],
+                description:fields.description[0],
+                price:fields.price[0],
+                categery:fields.categery[0],
+                quantity:fields.quantity[0],
+                starts:fields.starts[0],
+                belongsTo:fields.belongsTo[0],
+            });
+            product.photo.data=fs.readFileSync(photo[0].filepath);
+            product.photo.contentType=photo[0].mimetype;
             product.save();
+            return res.status(200).json({product});
         })
     } catch (error) {
         console.log(error);
@@ -41,7 +49,7 @@ module.exports.photo=async (req,res)=>{
 module.exports.getParticularProducts=async (req,res)=>{
     try {
         let belongsTo=req.query.belongsTo;
-        let products=await Product.find({belongsTo:belongsTo}).select('-photo').sort('-createdAt')
+        let products=await Product.find({belongsTo:belongsTo}).select('-photo')
         return res.status(200).json({products});
 
     } catch (error) {
