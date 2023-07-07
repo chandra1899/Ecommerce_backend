@@ -14,8 +14,7 @@ const productSchema=new mongoose.Schema({
         reqiured:true
     },
     categery:{
-        type:String,
-        required:true
+        type:String
     },
     quantity:{
         type:Number,
@@ -24,6 +23,14 @@ const productSchema=new mongoose.Schema({
     photo:{
         data:Buffer,
         contentType:String
+    },
+    starts:{
+        type:Number,
+        default:3
+    },
+    belongsTo:{
+        type:String,
+        required:true
     }
 },{
     timestamps:true
