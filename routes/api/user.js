@@ -19,7 +19,7 @@ router.post('/create-session',(req,res,next)=>{
         
     })(req, res, next);
 }, userController.createSession);
-
+router.get('/getuser',passport.checkAuthentication, userController.getuser);
 router.post('/checkuser',userController.checkUser)
 router.post('/sendOtp', userController.sendOTP);
 

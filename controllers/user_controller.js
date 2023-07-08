@@ -76,3 +76,17 @@ module.exports.sendOTP=async (req,res)=>{
         
     }
 }
+
+module.exports.getuser=async (req,res)=>{
+    try {
+        if(req.user){
+            let can=req.user;
+            return await res.status(200).json({can})
+        }
+        else {
+            return res.status(404).json({msg:"no user"})
+        }
+    } catch (err) {
+        return res.status(404).json({msg:"error in getting user",error:err})
+    }  
+}
