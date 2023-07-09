@@ -6,5 +6,6 @@ const passport=require('passport')
 router.post('/createproduct', productController.create);
 router.get('/photo/:id', productController.photo);
 router.get('/getParticularProducts', productController.getParticularProducts);
+router.get('/getProductDetails/:id', productController.getProductDetails);
 
 module.exports=router;

@@ -90,3 +90,12 @@ module.exports.getuser=async (req,res)=>{
         return res.status(404).json({msg:"error in getting user",error:err})
     }  
 }
+
+module.exports.destroySession=(req,res)=>{
+    req.logout((err)=>{
+        if(err){
+            console.log(err);
+        }
+        return res.status(200).json({msg:"successfully signed out"})
+    });
+}

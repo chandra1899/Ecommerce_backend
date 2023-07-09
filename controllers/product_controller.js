@@ -56,3 +56,13 @@ module.exports.getParticularProducts=async (req,res)=>{
         
     }
 }
+
+module.exports.getProductDetails=async (req,res)=>{
+    try {
+       let product=await Product.findById(req.params.id).select('-photo');
+       return res.status(200).json({product});
+
+    } catch (error) {
+        
+    }
+}

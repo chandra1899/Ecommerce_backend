@@ -22,6 +22,7 @@ router.post('/create-session',(req,res,next)=>{
 router.get('/getuser',passport.checkAuthentication, userController.getuser);
 router.post('/checkuser',userController.checkUser)
 router.post('/sendOtp', userController.sendOTP);
+router.get('/sign-out', userController.destroySession);
 
 
 module.exports=router;
