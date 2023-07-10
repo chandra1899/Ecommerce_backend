@@ -6,5 +6,6 @@ const passport=require('passport')
 router.post('/addProduct/:id',passport.checkAuthentication, cartController.addProduct);
 router.get('/getProducts',passport.checkAuthentication, cartController.getProducts);
 router.post('/deleteProduct/:id',passport.checkAuthentication, cartController.deleteProduct);
+router.post('/changeqyt',passport.checkAuthentication, cartController.changeqyt);
 
 module.exports=router;

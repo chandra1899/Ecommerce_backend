@@ -40,3 +40,19 @@ module.exports.deleteProduct=async (req,res)=>{
         return res.status(500).json({error})
     }
 }
+
+module.exports.changeqyt=async (req,res)=>{
+    try {
+        let cartProduct=await Cart.findById(req.query.id);
+        if(req.query.type==='inc'){
+            cartProduct.quantity+=1
+        }else{
+            cartProduct.quantity-=1
+        }
+        cartProduct.save();
+        return res.status(200).json({msg:'sucessfully changed'})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error})
+    }
+}
