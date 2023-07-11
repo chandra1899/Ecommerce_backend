@@ -4,9 +4,16 @@ const stripe = require('stripe')('sk_test_51NS1E9SGZImZqwPWElOwBfpasGSSAHJN0DPp9
 module.exports.checkoutSession=async (req, res) => {
     let cartProducts=await Cart.find({
         user:req.user._id
-    }).populate('cartProduct')
-    // console.log(cartProducts);
-    // return ;
+    }).populate({
+        path:'cartProduct',
+        select:'-photo'
+    })
+    const customer = await stripe.customers.create({
+        metadata: {
+          userId: req.user._id,
+          // cart: JSON.stringify(cartProducts),
+        },
+      });
     const line_items=await cartProducts.map((cartProduct)=>{
         return {
             price_data: {
@@ -24,9 +31,62 @@ module.exports.checkoutSession=async (req, res) => {
               quantity: cartProduct.quantity,
         }
     })
+
     const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        shipping_address_collection: {
+          allowed_countries: ["US", "CA", "KE","IN"],
+        },
+        shipping_options: [
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: {
+                amount: 0,
+                currency: "usd",
+              },
+              display_name: "Free shipping",
+              // Delivers between 5-7 business days
+              delivery_estimate: {
+                minimum: {
+                  unit: "business_day",
+                  value: 5,
+                },
+                maximum: {
+                  unit: "business_day",
+                  value: 7,
+                },
+              },
+            },
+          },
+          {
+            shipping_rate_data: {
+              type: "fixed_amount",
+              fixed_amount: {
+                amount: 1500,
+                currency: "usd",
+              },
+              display_name: "Next day air",
+              // Delivers in exactly 1 business day
+              delivery_estimate: {
+                minimum: {
+                  unit: "business_day",
+                  value: 1,
+                },
+                maximum: {
+                  unit: "business_day",
+                  value: 1,
+                },
+              },
+            },
+          },
+        ],
+        phone_number_collection: {
+          enabled: true,
+        },
       line_items: line_items,
       mode: 'payment',
+      customer: customer.id,
       success_url: 'http://localhost:5173/checkoutSuccess',
       cancel_url: 'http://localhost:5173/cart',
     });
