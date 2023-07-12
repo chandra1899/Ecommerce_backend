@@ -8,9 +8,11 @@ module.exports.checkoutSession=async (req, res) => {
         path:'cartProduct',
         select:'-photo'
     })
+    // console.log(cartProducts);
+    console.log( req.body.userId);
     const customer = await stripe.customers.create({
         metadata: {
-          userId: req.user._id,
+          userId: req.body.userId,
           // cart: JSON.stringify(cartProducts),
         },
       });
@@ -93,4 +95,47 @@ module.exports.checkoutSession=async (req, res) => {
   
   //   console.log(session.url);
     return res.status(200).json({url:session.url});
+  }
+
+module.exports.webhook=async  (req, res) => {
+    const event = req.body;
+  
+    // Handle the event
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntent = event.data.object;
+        break;
+      case 'payment_method.attached':
+        const paymentMethod = event.data.object;
+        break;
+      case 'checkout.session.completed':
+        data = event.data.object;
+        eventType = event.type;
+          stripe.customers
+            .retrieve(data.customer)
+            .then(async (customer) => {
+              try {
+                // CREATE ORDER
+                console.log('customer',customer);
+                console.log('data',data);
+                let cartProducts=await Cart.find({user:customer.metadata.userId}).populate({
+                  path:'cartProduct',
+                  select:'-photo'
+              })
+              // console.log(cartProducts);
+              let orderedProducts= cartProducts.map((product)=>product.cartProduct)
+              console.log(orderedProducts);
+
+              } catch (err) {
+                console.log(err);
+              }
+            })
+            .catch((err) => console.log(err.message));
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a res to acknowledge receipt of the event
+    res.json({received: true});
   }
