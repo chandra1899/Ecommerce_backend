@@ -7,5 +7,6 @@ router.post('/addProduct/:id',passport.checkAuthentication, cartController.addPr
 router.get('/getProducts',passport.checkAuthentication, cartController.getProducts);
 router.post('/deleteProduct/:id',passport.checkAuthentication, cartController.deleteProduct);
 router.post('/changeqyt',passport.checkAuthentication, cartController.changeqyt);
+router.post('/emptycart',passport.checkAuthentication, cartController.emptyCart);
 
 module.exports=router;

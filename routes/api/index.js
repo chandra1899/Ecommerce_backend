@@ -7,6 +7,7 @@ router.use('/user',require('./user'))
 router.use('/product',require('./product'))
 router.use('/cart',require('./cart'))
 router.use('/stripe',require('./stripe'))
+router.use('/order',require('./order'))
 router.use('/',homeController.home)
 
 module.exports=router;

@@ -56,3 +56,15 @@ module.exports.changeqyt=async (req,res)=>{
         return res.status(500).json({error})
     }
 }
+
+module.exports.emptyCart=async (req,res)=>{
+    try {
+        await Cart.deleteMany({
+            user:req.user._id
+        })
+        return res.status(200).json({msg:'sucessfully changed'})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error})
+    }
+}

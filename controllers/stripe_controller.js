@@ -1,4 +1,5 @@
 const Cart=require('../models/cart')
+const Order=require('../models/order')
 const stripe = require('stripe')('sk_test_51NS1E9SGZImZqwPWElOwBfpasGSSAHJN0DPp9AWbsKSz2beXXEofAhoUTgKFVi6xCK6UqARADilGv9Tca4YT7Dcx00GxL5GHOI')
 
 module.exports.checkoutSession=async (req, res) => {
@@ -97,6 +98,39 @@ module.exports.checkoutSession=async (req, res) => {
     return res.status(200).json({url:session.url});
   }
 
+  const handleOrders=async (customer,data)=>{
+        let cartProducts=await Cart.find({user:customer.metadata.userId}).populate({
+          path:'cartProduct',
+          select:'-photo'
+      })
+  // let orderedProducts= cartProducts.map((product)=>product.cartProduct)
+  let order=await Order.create({
+    userId:customer.metadata.userId,
+    customerId:data.customer,
+    paymentIntentId:data.payment_intent,
+    delivary_charge:data.total_details.amount_shipping,
+    shipping:data.shipping_details,
+    payment_status:data.payment_status,
+    mobile:data.customer_details.phone,
+    paymentBy:data.payment_method_types[0]
+  })
+
+  for(cartProduct of cartProducts){
+    order.products.push({
+      productId:cartProduct.cartProduct._id,
+      quantity:cartProduct.quantity
+    })
+  }
+  await order.save();
+  // console.log(order);
+
+  //empty cart
+  await Cart.deleteMany({
+    user:customer.metadata.userId
+  })
+
+  }
+
 module.exports.webhook=async  (req, res) => {
     const event = req.body;
   
@@ -118,13 +152,7 @@ module.exports.webhook=async  (req, res) => {
                 // CREATE ORDER
                 console.log('customer',customer);
                 console.log('data',data);
-                let cartProducts=await Cart.find({user:customer.metadata.userId}).populate({
-                  path:'cartProduct',
-                  select:'-photo'
-              })
-              // console.log(cartProducts);
-              let orderedProducts= cartProducts.map((product)=>product.cartProduct)
-              console.log(orderedProducts);
+                handleOrders(customer,data);
 
               } catch (err) {
                 console.log(err);
