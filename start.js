@@ -14,12 +14,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const cors=require("cors");
-app.use(
-    cors({
-      origin: true,
-      credentials: true,
-    })
-  );
+// app.use(
+//     cors({
+//       origin: true,
+//       credentials: true,
+//     })
+//   );
+
+app.use(cors({ 
+  origin: ["http://localhost:5173", "https://ecommerce-u145.onrender.com/","http://localhost:8000"],
+  credentials: true,
+}));
 
 app.use(express.urlencoded());
 app.use(cookieParser());
