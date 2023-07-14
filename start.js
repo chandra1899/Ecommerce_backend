@@ -24,11 +24,12 @@ app.use(
 app.use(express.urlencoded());
 app.use(cookieParser());
 
+app.use(express.static('dist'));
 // app.use('/photo',express.static(path.join(__dirname,'..')));
 
 app.use(session({
-  name:'ecommerce',
-  secret:'something',
+  name:process.env.SESSION_NAME,
+  secret:process.env.SESSION_SECRET,
   saveUninitialized:false,
   resave:false,
   cookie:{
@@ -36,7 +37,7 @@ app.use(session({
   },
   store: MongoStore.create(
       { 
-          mongoUrl: 'mongodb+srv://Chandra:kusam%40123@cluster0.fjtcy3u.mongodb.net/ecommerce'
+          mongoUrl: process.env.MONGOOSE_URL
        },function(err){
         console.log(err);
        }

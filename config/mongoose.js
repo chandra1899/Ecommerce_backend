@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://Chandra:kusam%40123@cluster0.fjtcy3u.mongodb.net/ecommerce');
+mongoose.connect(process.env.MONGOOSE_URL);
 // mongodb://127.0.0.1:27017/SocialMedia
 // mongodb+srv://Chandra:kusam%40123@cluster0.fjtcy3u.mongodb.net/ecommerce
 const db = mongoose.connection;

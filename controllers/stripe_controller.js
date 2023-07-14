@@ -23,7 +23,7 @@ module.exports.checkoutSession=async (req, res) => {
                 currency: 'usd',
                 product_data: {
                   name: cartProduct.cartProduct.name,
-                  images:[`http://localhost:8000/api/product/photo/${cartProduct.cartProduct._id}`],
+                  images:[`${process.env.BACKEND_URL}/api/product/photo/${cartProduct.cartProduct._id}`],
                   description:cartProduct.cartProduct.description,
                   metadata:{
                     id:cartProduct._id
