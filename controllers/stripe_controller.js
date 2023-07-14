@@ -90,7 +90,7 @@ module.exports.checkoutSession=async (req, res) => {
       line_items: line_items,
       mode: 'payment',
       customer: customer.id,
-      success_url: `${process.env.BACKEND_URL}/checkoutSuccess`,
+      success_url: `${process.env.BACKEND_URL}`,
       cancel_url: `${process.env.BACKEND_URL}/cart`,
     });
   
