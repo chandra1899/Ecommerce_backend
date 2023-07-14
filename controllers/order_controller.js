@@ -4,7 +4,9 @@ module.exports.getOrders=async (req,res)=>{
     try {
         let orders=await Order.find({
             userId:req.user._id
-        }).populate({
+        })
+        .sort('-createdAt')
+        .populate({
             path:'products.productId',
             select:'-photo'
         })
