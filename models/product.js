@@ -17,7 +17,7 @@ const productSchema=new mongoose.Schema({
         type:String
     },
     quantity:{
-        type:Number,
+        type:String,
         reqiured:true
     },
     photo:{
@@ -31,7 +31,13 @@ const productSchema=new mongoose.Schema({
     belongsTo:{
         type:String,
         required:true
-    }
+    },
+    reviews:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Review'
+        }
+    ],
 },{
     timestamps:true
 });

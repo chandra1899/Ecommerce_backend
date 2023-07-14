@@ -42,7 +42,8 @@ module.exports.photo=async (req,res)=>{
         res.set('Content-type',product.photo.contentType)
         return res.status(200).send(product.photo.data)
     } catch (error) {
-        
+        console.log(error);
+        return res.status(500).json({error})
     }
 }
 
@@ -53,16 +54,33 @@ module.exports.getParticularProducts=async (req,res)=>{
         return res.status(200).json({products});
 
     } catch (error) {
-        
+        console.log(error);
+        return res.status(500).json({error})
     }
 }
 
 module.exports.getProductDetails=async (req,res)=>{
     try {
-       let product=await Product.findById(req.params.id).select('-photo');
+       let product=await Product.findById(req.params.id).select('-photo')
+       .populate({
+        path:'reviews',
+        populate:{
+            path:'user'
+        }})
        return res.status(200).json({product});
 
     } catch (error) {
-        
+        console.log(error);
+        return res.status(500).json({error})
+    }
+}
+
+module.exports.getallproducts=async (req,res)=>{
+    try {
+        let allproducts=await Product.find({belongsTo:'product'}).select("-photo");
+        return res.status(200).json({allproducts})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error})
     }
 }
