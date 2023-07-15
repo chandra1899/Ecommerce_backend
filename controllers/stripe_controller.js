@@ -90,7 +90,7 @@ module.exports.checkoutSession=async (req, res) => {
       line_items: line_items,
       mode: 'payment',
       customer: customer.id,
-      success_url: `${process.env.BACKEND_URL}`,
+      success_url: `https://paymentsuccessecommerce.netlify.app/`,
       cancel_url: `${process.env.BACKEND_URL}/cart`,
     });
   
